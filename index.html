@@ -3165,16 +3165,20 @@ function shareWA() {
   const top = calculatedResults ? calculatedResults[0] : null;
   const country = top ? top.country : 'my top match';
   const flag = top ? top.flag : '🌏';
+  const refUrl = 'https://belongabroad.github.io?ref=wa';
   const text = `${flag} I just found my study abroad match on *Belong*!
 
 My top country: *${country}*
 
-🎯 Know before you go.
-Your journey, your choice. Best of luck. 🌏
+🎯 Know before you go — free 2-minute guide for Indian students.
 
-Try it free → belong.in
-— Belong: Know before you go.`;
+Try it free 👇
+${refUrl}`;
+
   window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+
+  // Log share to Google Sheet
+  logShare('WhatsApp', country);
 }
 
 function shareTG() {
