@@ -2305,15 +2305,16 @@ function calculateResults() {
 
   // Marks
   // Education
-  if (a.education === '12th') { de_score -= 10; de_warns.push('12th pass: German universities require a completed degree. Studienkolleg (foundation year) available but adds time and cost'); }
-  else if (a.education === 'grad_done') { de_score += 10; de_pros.push('Bachelor degree: Eligible for Masters programs in Germany — often tuition free at public universities'); }
-  else if (a.education === 'pg') { de_score += 18; de_pros.push('Postgraduate: German PhD and research programs are world class — many are fully funded'); }
-  else if (a.education === 'phd') { de_score += 25; de_pros.push('PhD/Doctoral: Germany is world #1 for PhD research — fully funded positions common. Humboldt Fellowship gives ₹2.5L+/month stipend for Indian researchers'); }
+  if (a.education === '12th') { de_score += 18; de_pros.push('12th pass: Germany\'s Studienkolleg (foundation year) is the most affordable route globally — ₹0 tuition, just living costs. Your best option at this stage'); }
+  else if (a.education === 'grad_final') { de_score += 15; de_pros.push('Final year student: Apply now for German Masters starting after graduation — APS verification takes 3 months so start immediately'); }
+  else if (a.education === 'grad_done') { de_score += 12; de_pros.push('Bachelor degree: Eligible for Masters programs in Germany — often tuition free at public universities'); }
+  else if (a.education === 'pg') { de_score += 22; de_pros.push('Postgraduate: German PhD and research programs are world class — many are fully funded with €1,400–2,000/month stipend'); }
+  else if (a.education === 'phd') { de_score += 32; de_pros.push('🏆 PhD/Doctoral: Germany is world #1 for PhD research — fully funded positions common. Humboldt Fellowship gives ₹2.5L+/month stipend for Indian researchers'); }
 
-  if (a.marks === 'top') { de_score += 15; de_pros.push('Your marks qualify for top German universities'); }
-  else if (a.marks === 'high') { de_score += 12; de_pros.push('Your marks are competitive for most German universities'); }
-  else if (a.marks === 'mid') { de_score += 15; de_warns.push('55–65% marks: you qualify for many German universities but NOT TU9 top schools'); }
-  else { de_score += 5; de_issues.push('Below 55% marks makes German university admission very difficult'); }
+  if (a.marks === 'top') { de_score += 12; de_pros.push('Your marks qualify for top German universities including TU9 group'); }
+  else if (a.marks === 'high') { de_score += 14; de_pros.push('Your marks are competitive for most German universities'); }
+  else if (a.marks === 'mid') { de_score += 20; de_pros.push('🟢 55–65% marks: Germany is one of the few countries where mid-range marks are genuinely accepted — many public universities have no strict cutoff'); }
+  else { de_score += 22; de_pros.push('🟢 Below 55% marks: Germany is your best option — public universities assess holistically, and foundation programs (Studienkolleg) have no marks cutoff'); }
 
   // IELTS
   if (['great','excel'].includes(a.ielts)) { de_score += 18; de_pros.push('IELTS score meets German university requirements comfortably'); }
@@ -2367,10 +2368,17 @@ function calculateResults() {
   else if (a.intake === 'sep27') { de_pros.push('September 2027: Plenty of time to prepare strong application'); de_score += 10; }
 
   // Goal
-  if (a.goal === 'just_degree') { de_score += 20; de_pros.push('Just want a degree: Germany\'s near-free tuition gives maximum value — save ₹15–20L vs UK'); }
-  else if (a.goal === 'work_return') { de_score += 8; de_pros.push('Work then return: Germany offers 18-month job seeker visa after graduation'); }
-  else if (a.goal === 'settle') { de_score += 5; de_warns.push('PR goal: German PR takes 5+ years — possible but longer path than Australia or Canada'); }
-  else if (a.goal === 'research') { de_score += 35; de_pros.push('Research career: Germany is the #1 choice for academic careers — thousands of fully funded PhD and PostDoc positions for Indian researchers'); }
+  if (a.goal === 'just_degree') {
+    if (['science','phd_research','ai_data','tech'].includes(a.field) && ['vlow','low','mid'].includes(a.budget)) {
+      de_score += 32; de_pros.push('🏆 Just want a degree in '+a.field+': Germany\'s near-free tuition is unmatched — save ₹15–30L vs UK or Australia. Best value in the world for this combination');
+    } else {
+      de_score += 18; de_pros.push('Just want a degree: Germany\'s near-free tuition gives good value — save ₹10–20L vs UK or Australia');
+    }
+  }
+  else if (a.goal === 'work_return') { de_score += 5; de_warns.push('Work then return: Germany\'s 18-month job seeker visa requires B1/B2 German — Ireland and Netherlands offer stronger work pathways for English speakers'); }
+  else if (a.goal === 'settle') { de_score += 5; de_warns.push('PR goal: German PR takes 5+ years — Australia or Canada are faster paths'); }
+  else if (a.goal === 'research') { de_score += 42; de_pros.push('🏆 Research career: Germany is THE #1 choice for academic careers — thousands of fully funded PhD and PostDoc positions. DAAD and Humboldt fellowships specifically for Indian researchers'); }
+  else if (a.goal === 'unsure') { de_score += 15; de_pros.push('Not sure yet: Germany gives you time — free tuition means less financial pressure while you figure out your path'); }
 
   // English comfort
   if (a.english === 'no') { de_warns.push('Not comfortable in English: German-medium programs exist and are FREE — could actually be your best option'); de_score += 5; }
@@ -2384,33 +2392,45 @@ function calculateResults() {
   let ie_score = 0;
   let ie_issues = [], ie_pros = [], ie_actions = [], ie_warns = [];
 
-  if (a.budget === 'vlow') { ie_score -= 10; ie_issues.push('Under ₹15L is too low for Ireland — minimum realistic is ₹22L+. Germany is a better fit for this budget'); }
-  else if (a.budget === 'low') { ie_score += 22; ie_pros.push('₹15–25L fits Ireland well — one of the best value English-speaking countries'); }
-  else if (a.budget === 'mid') { ie_score += 28; ie_pros.push('Budget fits Ireland comfortably — excellent English-speaking option'); }
-  else if (['high','vhigh'].includes(a.budget)) { ie_score += 25; ie_pros.push('Budget comfortably covers Ireland total costs'); }
-  if (a.budget === 'scholarship') { ie_score += 20; ie_pros.push('Govt of Ireland International Education Scholarship available — highly competitive'); }
+  if (a.budget === 'vlow') { ie_score -= 15; ie_issues.push('Under ₹15L is too low for Ireland — minimum realistic is ₹22L+. Germany or France are better for this budget'); }
+  else if (a.budget === 'low') { ie_score += 12; ie_pros.push('₹15–25L fits Ireland — lean but manageable for English-speaking destination'); }
+  else if (a.budget === 'mid') { ie_score += 22; ie_pros.push('Budget fits Ireland comfortably — strong value among English-speaking countries'); }
+  else if (a.budget === 'high') { ie_score += 18; ie_pros.push('Budget fits Ireland well — strong universities, top tech employers'); }
+  else if (a.budget === 'vhigh') {
+    if (['tech','ai_data','cyber','business'].includes(a.field)) {
+      ie_score += 26; ie_pros.push('High budget + tech field in Ireland: You can target the top companies — Google Dublin, Meta, Apple, LinkedIn HQ. This is the best combination for tech careers in Europe');
+    } else {
+      ie_score += 20; ie_pros.push('Budget comfortably covers Ireland — strong universities, growing economy');
+    }
+  }
+  if (a.budget === 'scholarship') { ie_score += 15; ie_pros.push('Govt of Ireland International Education Scholarship available — highly competitive'); }
 
   // Education level
-  if (a.education === '12th') { ie_score -= 12; ie_warns.push('12th pass: Irish universities require a bachelor degree. Foundation programs available but add 1 year'); }
-  else if (a.education === 'grad_done') { ie_score += 8; ie_pros.push('Bachelor degree: Eligible for 1-year Masters programs in Ireland'); }
-  else if (a.education === 'pg') { ie_score += 14; ie_pros.push('Postgraduate: Strong PhD and research programs in Ireland — pharma and tech especially'); }
-  else if (a.education === 'phd') { ie_score += 18; ie_pros.push('PhD/Doctoral: Irish universities actively recruit international PhD students — Science Foundation Ireland funding available'); }
+  if (a.education === '12th') { ie_score -= 22; ie_issues.push('12th pass: Irish universities require a completed bachelor degree — not eligible yet. Germany or NZ are better options at this stage'); }
+  else if (a.education === 'grad_final') { ie_score += 8; ie_pros.push('Final year: Apply now for Ireland September intake — decisions come 3–4 months after application'); }
+  else if (a.education === 'grad_done') { ie_score += 22; ie_pros.push('Bachelor done: Ireland\'s 1-year Masters is excellent value — English-speaking, EU-based, top tech employers'); }
+  else if (a.education === 'pg') { ie_score += 14; ie_pros.push('Postgraduate: Strong PhD programs in Ireland — pharma, tech and biotech funded positions available'); }
+  else if (a.education === 'phd') { ie_score += 10; ie_pros.push('PhD/Doctoral: Irish universities recruit international researchers — Science Foundation Ireland funding available'); }
 
-  if (['high','top'].includes(a.marks)) { ie_score += 15; ie_pros.push('Marks are competitive for Irish universities'); }
-  else if (a.marks === 'mid') { ie_score += 15; ie_warns.push('55–65% marks: accepted by many Irish colleges but not top universities like UCD or Trinity'); }
-  else { ie_score += 5; ie_issues.push('Below 55%: significantly limits Irish university choices'); }
+  if (a.marks === 'top') { ie_score += 18; ie_pros.push('Excellent marks: Trinity, UCD and UCC are fully accessible'); }
+  else if (a.marks === 'high') { ie_score += 13; ie_pros.push('Strong marks: competitive for most Irish universities'); }
+  else if (a.marks === 'mid') { ie_score += 6; ie_warns.push('55–65% marks: accepted by many Irish colleges — not for Trinity or UCD'); }
+  else { ie_score -= 12; ie_issues.push('Below 55%: limits Irish choices — Germany, France or NZ are more accessible at this marks level'); }
 
-  if (['great','excel'].includes(a.ielts)) { ie_score += 20; ie_pros.push('IELTS score is strong for Ireland'); }
-  else if (a.ielts === 'good') { ie_score += 15; ie_pros.push('IELTS 6.0–6.5 meets most Irish college requirements'); }
-  else if (a.ielts === 'ok') { ie_score += 10; ie_warns.push('5.5–6.0 IELTS: meets minimum for some Irish colleges — not for top universities'); }
-  else if (a.ielts === 'none') { ie_score += 8; ie_warns.push('No IELTS yet: Ireland minimum is 6.0 — must appear before applying'); }
-  else { ie_score -= 5; ie_issues.push('IELTS below 5.5 does not meet Irish entry requirements'); }
+  if (a.ielts === 'excel') { ie_score += 18; ie_pros.push('Exceptional IELTS: Trinity and UCD top programs are fully accessible — scholarship eligibility increases'); }
+  else if (a.ielts === 'great') { ie_score += 15; ie_pros.push('Strong IELTS meets Irish university requirements comfortably'); }
+  else if (a.ielts === 'good') { ie_score += 11; ie_pros.push('IELTS 6.0–6.5 meets most Irish college requirements'); }
+  else if (a.ielts === 'ok') { ie_score += 5; ie_warns.push('5.5–6.0 IELTS: meets minimum for some Irish colleges only'); }
+  else if (a.ielts === 'none') { ie_score -= 5; ie_warns.push('No IELTS: Ireland requires 6.0 minimum — Germany or France are better options without IELTS'); }
+  else { ie_score -= 12; ie_issues.push('IELTS below 5.5 does not meet Irish entry requirements — Germany no-IELTS route is better'); }
 
   if (a.field === 'tech') {
     if (['high','vhigh'].includes(a.budget)) {
-      ie_score += 28; ie_pros.push('🔥 Tech + High Budget: Ireland is the European HQ of Google, Apple, Meta, LinkedIn — at your budget the top Dublin tech companies are fully accessible. Best tech-to-PR pathway in Europe');
+      ie_score += 25; ie_pros.push('🔥 Tech + High Budget: Ireland is the European HQ of Google, Apple, Meta, LinkedIn — best tech-to-PR pathway in Europe');
+    } else if (a.goal === 'work_return' || a.goal === 'settle') {
+      ie_score += 20; ie_pros.push('IT/Tech: Ireland is the European HQ of Google, Apple, Meta, LinkedIn — 2-year Graduate Stay Back visa');
     } else {
-      ie_score += 18; ie_pros.push('IT/Tech: Ireland is the European HQ of Google, Apple, Meta, LinkedIn — 2-year Graduate Stay Back visa');
+      ie_score += 12; ie_pros.push('Tech: Ireland has Google, Apple, Meta — but Germany and Netherlands are strong alternatives depending on your goal');
     }
   }
   else if (a.field === 'ai_data') { ie_score += 25; ie_pros.push('🔥 AI/Data Science: Dublin is Europe\'s AI hub — Google DeepMind, Microsoft AI and Meta AI all operate here. Excellent grad jobs'); }
@@ -2424,9 +2444,7 @@ function calculateResults() {
   else if (a.field === 'law') { ie_score += 10; ie_pros.push('Law: Irish law is common law (same as India) — degree recognised across EU and Commonwealth countries'); }
   else { ie_score += 8; }
 
-  if (a.english === 'full') { ie_score += 15; ie_pros.push('English medium: Ireland is fully English-speaking — no language barrier'); }
-  else if (a.english === 'partial') { ie_score += 8; ie_warns.push('English medium is the only option in Ireland — language improvement important'); }
-  else { ie_score -= 5; ie_issues.push('Ireland is English-only — not suitable if you need non-English medium instruction'); }
+  // English medium advantage already factored in field scoring
 
   if (a.intake === 'sep26') { ie_pros.push('September 2026 intake: Still possible if you apply immediately — Irish deadlines are April–May'); ie_score += 8; }
   else if (a.intake === 'jan27') { ie_warns.push('January 2027: Ireland has fewer January intake options — confirm with specific colleges'); }
@@ -2434,16 +2452,22 @@ function calculateResults() {
 
   // English-speaking advantage — only if field suits Ireland
   if (['tech','business','health','hospitality'].includes(a.field)) {
-    ie_score += 15; ie_pros.push('English medium: Ireland is fully English-speaking — no language barrier for Indian students');
+    ie_score += 8; ie_pros.push('English medium: Ireland is fully English-speaking — smooth transition for Indian students');
   } else {
-    ie_score += 5; ie_pros.push('English medium: Ireland is English-speaking — easier adjustment for Indian students');
+    ie_score += 3; ie_pros.push('English medium: Ireland is English-speaking — no language adjustment needed');
   }
 
-  if (a.goal === 'research') { ie_score += 12; ie_pros.push('Research career: Irish Research Council offers funded PhD fellowships — strong in pharma, biotech, and AI'); }
-  else if (a.goal === 'settle') { ie_score += 10; ie_pros.push('PR goal: Ireland offers a clear pathway to permanent residency after 5 years'); }
-  else if (a.goal === 'work_return') { ie_score += 12; ie_pros.push('Post-study work: Ireland offers 2-year stay-back Stamp 1G visa for graduates'); }
-  else if (a.goal === 'research') { ie_score += 15; ie_pros.push('Research career: Strong Irish research funding from SFI and IRC — English-medium advantage over Germany. Trinity, UCD and UCC are research-active'); }
-  else if (a.goal === 'just_degree') { ie_score += 5; ie_pros.push('Degree value: Irish degrees are EU-accredited and globally recognised'); }
+  if (a.goal === 'research') { ie_score += 10; ie_pros.push('Research career: Irish Research Council offers funded PhD fellowships — strong in pharma, biotech, AI'); }
+  else if (a.goal === 'settle') {
+    if (['tech','cyber','business','ai_data'].includes(a.field)) {
+      ie_score += 22; ie_pros.push('PR goal + tech field: Ireland is the European HQ for tech companies — Google, Meta, Apple offer sponsorship. Stamp 4 PR after 5 years is a well-trodden path');
+    } else {
+      ie_score += 15; ie_pros.push('PR goal: Ireland offers permanent residency after 5 years — clearer path than Germany');
+    }
+  }
+  else if (a.goal === 'work_return') { ie_score += 28; ie_pros.push('🏆 Post-study work: Ireland\'s 2-year Stamp 1G visa + Google, Meta, Apple, LinkedIn all headquartered here = best work-then-return package in Europe'); }
+  else if (a.goal === 'just_degree') { ie_score += 8; ie_pros.push('Degree value: Irish degrees EU-accredited and globally recognised'); }
+  else if (a.goal === 'unsure') { ie_score += 12; ie_pros.push('Not sure yet: Ireland\'s English-medium environment and strong job market make it a safe, flexible choice'); }
 
   ie_actions.push('Apply directly to Irish universities — no entrance exam required (unlike UK)');
   ie_actions.push('Ireland requires €10,000 (≈₹9.3L) in bank for 1-year living costs — official ISD requirement from June 2025. Plus full first-year tuition proof.');
@@ -2461,15 +2485,16 @@ function calculateResults() {
   else if (a.budget === 'vhigh') { uk_score += 35; uk_pros.push('Budget perfectly covers UK — top universities, Chevening scholarship also possible'); }
   if (a.budget === 'scholarship') { uk_score += 28; uk_pros.push('Chevening Scholarship — UK government fully funded, one of the most prestigious globally'); }
   // Education
-  if (a.education === '12th') { uk_score -= 18; uk_issues.push('12th pass: UK universities require a completed degree. Foundation year at ₹10–15L adds cost and time'); }
-  else if (a.education === 'grad_done') { uk_score += 12; uk_pros.push('Bachelor degree: Eligible for 1-year Masters programs — world-class value in just 12 months'); }
-  else if (a.education === 'pg') { uk_score += 20; uk_pros.push('Masters done: Eligible for UK PhD programs — Chevening and Commonwealth scholarships cover full costs'); }
-  else if (a.education === 'phd') { uk_score += 28; uk_pros.push('PhD profile: UK is a top PostDoc destination — UKRI fellowships, Royal Society grants, and British Academy awards. Strong path to academic career'); }
+  if (a.education === '12th') { uk_score -= 30; uk_issues.push('12th pass: UK universities require a completed degree — not eligible. Germany or NZ are far better options at this stage'); }
+  else if (a.education === 'grad_final') { uk_score += 8; uk_warns.push('Final year: UK applications open now but you need your degree certificate before visa — plan for September next year'); }
+  else if (a.education === 'grad_done') { uk_score += 15; uk_pros.push('Bachelor done: Eligible for UK 1-year Masters — world-class in just 12 months'); }
+  else if (a.education === 'pg') { uk_score += 28; uk_pros.push('🏆 Masters done: UK PhD programs are 3 years (fastest globally) — Chevening and Commonwealth scholarships cover full costs. Strong academic career path'); }
+  else if (a.education === 'phd') { uk_score += 35; uk_pros.push('🏆 PhD profile: UK is a top PostDoc destination — UKRI fellowships, Royal Society grants. Academic career path strongest here'); }
 
-  if (a.marks === 'top') { uk_score += 25; uk_pros.push('Excellent marks open Russell Group university doors'); }
-  else if (a.marks === 'high') { uk_score += 18; uk_pros.push('Strong marks — good university tier accessible'); }
-  else if (a.marks === 'mid') { uk_score += 10; uk_warns.push('55–65% marks: limited to mid-tier UK universities, not top institutions'); }
-  else { uk_score -= 5; uk_issues.push('Below 55%: significantly limits UK options and increases visa risk'); }
+  if (a.marks === 'top') { uk_score += 30; uk_pros.push('🌟 Excellent marks: Russell Group — Oxford, Imperial, UCL, Edinburgh — are fully accessible. Your marks are your strongest asset for UK admission'); }
+  else if (a.marks === 'high') { uk_score += 20; uk_pros.push('Strong marks: good UK university tier accessible — solid ranked institutions'); }
+  else if (a.marks === 'mid') { uk_score += 5; uk_warns.push('55–65% marks: limited to lower-tier UK universities. Ireland or Australia offer better value at this marks level'); }
+  else { uk_score -= 20; uk_issues.push('Below 55%: UK visa rejection risk is high at this marks level — Germany or NZ are far more realistic options'); }
 
   if (a.ielts === 'excel') { uk_score += 30; uk_pros.push('🌟 Exceptional IELTS: UK top universities — Oxford, Imperial, UCL — are now fully accessible. Your band opens Chevening and university scholarships'); }
   else if (a.ielts === 'great') { uk_score += 22; uk_pros.push('Strong IELTS meets UK university requirements comfortably'); }
@@ -2488,12 +2513,11 @@ function calculateResults() {
   else if (a.field === 'business') { uk_score += 18; uk_pros.push('Business/MBA: UK MBA is globally top ranked — LBS, Manchester, Warwick. 1-year Masters is exceptional value vs 2-year USA'); }
   else if (a.field === 'health') { uk_score += 12; uk_pros.push('Healthcare: NHS actively recruits internationally — Tier 2 Health visa available, NMC registration clear pathway'); }
   else if (a.field === 'mass_comm') {
-    uk_score += 40;
-    // Extra boost: mass_comm is a field where UK advantage is absolute — override IELTS gap
+    uk_score += 45;
     if (['ok','low','none'].includes(a.ielts)) {
-      uk_score += 15; uk_pros.push('🏆 Mass Comm/Media: UK is the ONLY choice — BBC, Reuters, The Guardian, Sky News. Even with your current IELTS, UK is the right destination. Improve to 6.5 before applying but start preparing now');
+      uk_score += 15; uk_pros.push('🏆 Mass Comm/Media: UK is the ONLY choice — BBC, Reuters, The Guardian, Sky News. Even with your current IELTS, UK is the right destination. Improve to 6.5 before applying');
     } else {
-      uk_pros.push('🏆 Mass Comm/Media: UK is the ONLY choice — BBC, Reuters, The Guardian, Sky News, Channel 4. Cardiff, City London, Goldsmiths are world #1 in journalism');
+      uk_score += 10; uk_pros.push('🏆 Mass Comm/Media: UK is the ONLY choice — BBC, Reuters, The Guardian, Sky News, Channel 4. Cardiff, City London, Goldsmiths are world #1 in journalism');
     }
   }
   else if (a.field === 'law') {
@@ -2541,14 +2565,16 @@ function calculateResults() {
   if (a.budget === 'scholarship') { au_score += 22; au_pros.push('Australia Awards Scholarship — full funding for Indian students, very prestigious'); }
 
   // Education
-  if (a.education === '12th') { au_score -= 15; au_issues.push('12th pass: Australian universities require a completed bachelor degree. Foundation year available but expensive — adds ₹8–12L'); }
-  else if (a.education === 'grad_done') { au_score += 10; au_pros.push('Bachelor degree: Eligible for Masters programs in Australia — 1.5 to 2 years'); }
-  else if (a.education === 'pg') { au_score += 16; au_pros.push('Masters done: Eligible for PhD programs in Australia — RTP scholarship covers full fees + living stipend'); }
-  else if (a.education === 'phd') { au_score += 22; au_pros.push('PhD profile: Australian research fellowships (ARC, NHMRC) actively recruit Indian researchers. Strong path to PR via skilled migration after research role'); }
+  if (a.education === '12th') { au_score -= 25; au_issues.push('12th pass: Australian universities require a completed degree — not eligible. Germany or NZ foundation programs are far cheaper options'); }
+  else if (a.education === 'grad_final') { au_score += 8; au_warns.push('Final year: Australia February intake — apply now, visa processing takes 3–4 months'); }
+  else if (a.education === 'grad_done') { au_score += 22; au_pros.push('🏆 Bachelor done: Australia\'s 1.5–2 year Masters with 2–4 year post-study work visa is one of the best packages for Indian graduates'); }
+  else if (a.education === 'pg') { au_score += 18; au_pros.push('Masters done: RTP scholarship for PhD covers full fees + AUD 32,000/year stipend — strong PR path after research'); }
+  else if (a.education === 'phd') { au_score += 14; au_pros.push('PhD profile: Australian ARC fellowships recruit Indian researchers — strong PR pathway via skilled migration'); }
 
-  if (['high','top'].includes(a.marks)) { au_score += 20; au_pros.push('Strong marks give access to Group of 8 Australian universities'); }
-  else if (a.marks === 'mid') { au_score += 15; au_pros.push('55–65% marks: many reputable Australian universities are accessible'); }
-  else { au_score += 5; au_warns.push('Below 55%: some pathway programs available before direct degree entry'); }
+  if (a.marks === 'top') { au_score += 22; au_pros.push('Excellent marks: Group of Eight — Melbourne, ANU, Sydney — are fully accessible'); }
+  else if (a.marks === 'high') { au_score += 18; au_pros.push('Strong marks: competitive for most Australian universities'); }
+  else if (a.marks === 'mid') { au_score += 12; au_pros.push('55–65% marks: many reputable Australian universities accessible — pathway programs available'); }
+  else { au_score -= 8; au_issues.push('Below 55%: Australia visa officers scrutinise weak academic profiles more carefully — Germany or NZ are lower risk options'); }
 
   if (a.ielts === 'excel') { au_score += 25; au_pros.push('🌟 Exceptional IELTS: Australia Awards Scholarship is now realistic for you — fully funded and highly competitive'); }
   else if (a.ielts === 'great') { au_score += 20; au_pros.push('Strong IELTS score meets all Australian university requirements comfortably'); }
@@ -2576,7 +2602,13 @@ function calculateResults() {
     }
   }
   else if (a.field === 'ai_data') { au_score += 18; au_pros.push('AI/Data Science: Australia has strong AI research at ANU, Melbourne, Sydney — growing industry demand and PR pathway for data professionals'); }
-  else if (a.field === 'cyber') { au_score += 20; au_pros.push('Cybersecurity: Australia government is investing heavily in cyber defense — cyber professionals on skilled occupation list for PR'); }
+  else if (a.field === 'cyber') {
+    if (a.goal === 'settle') {
+      au_score += 30; au_pros.push('🏆 Cyber + PR goal: Australia is the best choice — cyber professionals are on the critical skills list, fastest PR pathway of any country for this combination');
+    } else {
+      au_score += 18; au_pros.push('Cybersecurity: Australia government investing in cyber defense — cyber professionals on skilled occupation list for PR');
+    }
+  }
   else if (a.field === 'health') { au_score += 22; au_pros.push('🏆 Healthcare: Nursing and healthcare are on Australia\'s critical shortage list — fastest PR pathway, AHPRA registration clear for Indian nurses'); }
   else if (a.field === 'hospitality') { au_score += 15; au_pros.push('Hospitality: Australia is a top destination — tourism is a major industry, strong work rights during study'); }
   else if (a.field === 'science') { au_score += 12; au_pros.push('Sciences: Group of Eight universities (Melbourne, ANU, Sydney) have strong research programs'); }
@@ -2612,10 +2644,11 @@ function calculateResults() {
   else { us_score -= 20; us_issues.push('USA minimum realistic budget is ₹60L+ — much higher than other destinations'); }
 
   // Education level
-  if (a.education === '12th') { us_score -= 20; us_issues.push('12th pass: US universities do not accept 12th pass for Masters. A full undergraduate degree is required first.'); }
-  else if (a.education === 'pg') { us_score += 10; us_pros.push('Postgraduate: US PhD programs are often fully funded with stipend — especially in STEM fields.'); }
-  else if (a.education === 'phd') { us_score += 28; us_pros.push('PhD/Doctoral: US universities offer the best funded PhD programs globally — TA/RA positions cover tuition and living. F-1 OPT allows 3 years work after PhD'); }
-  else { us_score += 5; }
+  if (a.education === '12th') { us_score -= 35; us_issues.push('12th pass: US universities require a full bachelor degree — not eligible. Germany or NZ are the right options now'); }
+  else if (a.education === 'grad_final') { us_score += 5; us_warns.push('Final year: US applications need GRE scores — start prep now for next cycle'); }
+  else if (a.education === 'grad_done') { us_score += 8; us_warns.push('Bachelor done: US Masters requires GRE/GMAT — add 6 months prep time'); }
+  else if (a.education === 'pg') { us_score += 20; us_pros.push('Masters done: US PhD programs often fully funded with stipend + tuition waiver — best in world for STEM'); }
+  else if (a.education === 'phd') { us_score += 35; us_pros.push('🏆 PhD/Doctoral: US is the world\'s top PhD destination — TA/RA positions cover full tuition and living. F-1 OPT gives 3 years post-PhD work'); }
 
   // Scholarship
   if (a.budget === 'scholarship') { us_score += 30; us_pros.push('Scholarship: Many top US universities give merit-based aid to international students — some cover 50-100% of tuition. Fulbright scholarship is fully funded.'); }
@@ -2669,10 +2702,11 @@ function calculateResults() {
   else if (['high','vhigh'].includes(a.budget)) { nz_score += 25; nz_pros.push('Budget comfortably covers New Zealand costs'); }
 
   // Education level
-  if (a.education === '12th') { nz_score -= 8; nz_warns.push('12th pass: Foundation programs available at most NZ universities before degree entry.'); }
-  else if (a.education === 'pg') { nz_score += 10; nz_pros.push('Postgraduate: NZ has strong research programs, particularly in agriculture, marine science and IT.'); }
-  else if (a.education === 'phd') { nz_score += 14; nz_pros.push('PhD/Doctoral: NZ PhD is tuition-free for domestic and often subsidised for international — stipend scholarships available through universities'); }
-  else { nz_score += 5; }
+  if (a.education === '12th') { nz_score += 20; nz_pros.push('🟢 12th pass: NZ is one of the easiest English-speaking countries for 12th pass students — affordable foundation programs feed directly into degree. Less competitive than Australia or UK'); }
+  else if (a.education === 'grad_final') { nz_score += 12; nz_pros.push('Final year: NZ February intake — good timeline, straightforward application process'); }
+  else if (a.education === 'grad_done') { nz_score += 8; nz_pros.push('Bachelor done: 1–2 year Masters in NZ with open work visa after graduation'); }
+  else if (a.education === 'pg') { nz_score += 12; nz_pros.push('Postgraduate: NZ has strong research programs in agriculture, marine science and IT'); }
+  else if (a.education === 'phd') { nz_score += 16; nz_pros.push('PhD/Doctoral: NZ PhD subsidised for international students — stipend scholarships available'); }
 
   // Scholarship
   if (a.budget === 'scholarship') { nz_score += 18; nz_pros.push('Scholarship: New Zealand government scholarships available for Indian students — covers tuition and living costs.'); }
@@ -2680,9 +2714,10 @@ function calculateResults() {
   // Law
   if (a.field === 'law') { nz_score -= 15; nz_issues.push('Law: New Zealand is a very small legal market — not recommended for law studies. UK, Australia or Ireland are far better options.'); }
 
-  if (['high','top'].includes(a.marks)) { nz_score += 22; nz_pros.push('Strong marks — competitive for University of Auckland and Victoria University'); }
-  else if (a.marks === 'mid') { nz_score += 18; nz_pros.push('55–65% marks: well accepted at most New Zealand universities'); }
-  else { nz_score += 8; nz_warns.push('Below 55%: pathway programs available before direct entry'); }
+  if (a.marks === 'top') { nz_score += 14; nz_pros.push('Strong marks: University of Auckland (ranked 65 globally) and Victoria University accessible'); }
+  else if (a.marks === 'high') { nz_score += 16; nz_pros.push('Good marks: competitive for most NZ universities'); }
+  else if (a.marks === 'mid') { nz_score += 22; nz_pros.push('🟢 55–65% marks: NZ universities are very accessible — less strict than Australia or Ireland on academic history'); }
+  else { nz_score += 28; nz_pros.push('🟢 Below 55% marks: NZ is one of the most accessible English-speaking destinations — pathway programs available with no strict marks cutoff'); }
 
   if (['great','excel'].includes(a.ielts)) { nz_score += 20; nz_pros.push('IELTS score comfortably meets NZ requirements'); }
   else if (a.ielts === 'good') { nz_score += 16; nz_pros.push('IELTS 6.0–6.5 meets most NZ university entry requirements'); }
@@ -2716,20 +2751,195 @@ function calculateResults() {
 
   countries.push({ country: 'New Zealand', flag: '🇳🇿', score: nz_score, pros: nz_pros, issues: nz_issues, warns: nz_warns, actions: nz_actions, cost: '₹28–42L', tuition: '₹10–18L/yr', approval: 'Good', pr: '3–5 years' });
 
+  // ===== FRANCE =====
+  let fr_score = 0;
+  let fr_issues = [], fr_pros = [], fr_actions = [], fr_warns = [];
+
+  if (a.budget === 'vlow') { fr_score += 20; fr_pros.push('🟢 Under ₹15L: France is one of the only developed countries where this budget works — public university tuition is €170–380/year. One of the cheapest study destinations in the world'); }
+  else if (a.budget === 'low') { fr_score += 28; fr_pros.push('₹15–25L fits France comfortably — public university near-free tuition makes this the best-value destination at this budget'); }
+  else if (a.budget === 'mid') { fr_score += 22; fr_pros.push('Budget covers France well — excellent quality of life and education at this range'); }
+  else if (['high','vhigh'].includes(a.budget)) { fr_score += 15; fr_pros.push('Budget comfortably covers France — including top grandes écoles like HEC Paris or INSEAD'); }
+  if (a.budget === 'scholarship') { fr_score += 20; fr_pros.push('Eiffel Scholarship — French government fully funds exceptional international students. Highly competitive but open to Indians'); }
+
+  if (a.education === '12th') { fr_score += 15; fr_pros.push('12th pass: French universities accept 12th pass for bachelor programs — one of few countries to do so. Very affordable route'); }
+  else if (a.education === 'grad_final') { fr_score += 12; fr_pros.push('Final year: Apply now for French grandes écoles or public university Masters starting September'); }
+  else if (a.education === 'grad_done') { fr_score += 18; fr_pros.push('Bachelor done: French Masters (M1+M2) is 2 years — very affordable at public universities'); }
+  else if (a.education === 'pg') { fr_score += 16; fr_pros.push('Postgraduate: French PhD programs at CNRS institutions are world-class — especially in sciences, engineering and humanities'); }
+  else if (a.education === 'phd') { fr_score += 20; fr_pros.push('PhD/Doctoral: France has outstanding research — CNRS is the world\'s largest research organisation. Many funded postdoc positions'); }
+
+  if (a.marks === 'top') { fr_score += 14; fr_pros.push('Excellent marks: Grandes écoles — HEC Paris, Sciences Po, École Polytechnique — are accessible'); }
+  else if (a.marks === 'high') { fr_score += 14; fr_pros.push('Strong marks: competitive for most French universities and grandes écoles programs'); }
+  else if (a.marks === 'mid') { fr_score += 14; fr_pros.push('🟢 55–65% marks: French public universities are accessible — less strict than UK or Ireland'); }
+  else { fr_score += 16; fr_pros.push('🟢 Below 55% marks: France is highly accessible — public universities have open admission for many programs'); }
+
+  if (['great','excel'].includes(a.ielts)) { fr_score += 12; fr_pros.push('Strong IELTS: Many French programs taught in English — your score opens the best options'); }
+  else if (a.ielts === 'good') { fr_score += 10; fr_pros.push('IELTS 6.0–6.5 meets most French English-medium program requirements'); }
+  else if (a.ielts === 'ok') { fr_score += 10; fr_pros.push('🟢 Low IELTS: Many French universities offer programs in French — no IELTS needed'); }
+  else if (a.ielts === 'none') { fr_score += 10; fr_pros.push('🟢 No IELTS: French-medium programs require no IELTS — near-free tuition'); }
+  else { fr_score += 8; fr_warns.push('Very low IELTS: French-medium programs are your best route'); }
+
+  if (a.field === 'arts') { fr_score += 35; fr_pros.push('🏆 Arts/Humanities: France is the world capital of arts, culture and philosophy — Sorbonne, Sciences Po, École des Beaux-Arts. For Indian arts students France rivals UK'); }
+  else if (a.field === 'business') { fr_score += 28; fr_pros.push('🔥 Business: HEC Paris is ranked #1 in Europe — INSEAD (Fontainebleau) is globally top 5 MBA. French business degrees are globally respected'); }
+  else if (a.field === 'hospitality') { fr_score += 30; fr_pros.push('🏆 Hospitality: France is the hospitality capital of the world — École hôtelière de Lausanne Paris campus, Glion, Institut Paul Bocuse. Unmatched for luxury hospitality careers'); }
+  else if (a.field === 'science') { fr_score += 20; fr_pros.push('Sciences: France has world-class science programs — École Polytechnique, CNRS, Pasteur Institute are globally top ranked'); }
+  else if (a.field === 'tech') { fr_score += 15; fr_pros.push('Tech/Engineering: France is growing fast — Paris is Europe\'s 2nd largest startup hub (Station F). Strong engineering tradition'); }
+  else if (a.field === 'ai_data') { fr_score += 18; fr_pros.push('AI/Data Science: France is a serious AI player — Inria research institute, CentraleSupélec, and Paris\'s growing AI startup scene. Lower cost than UK or Ireland'); }
+  else if (a.field === 'mass_comm') { fr_score += 20; fr_pros.push('Media/Journalism: Sciences Po Paris has one of Europe\'s best journalism schools — strong international media presence'); }
+  else if (a.field === 'law') { fr_score += 10; fr_warns.push('Law: French civil law is different from Indian common law — UK or Ireland are better for globally recognised law careers'); }
+  else if (a.field === 'health') { fr_score += 8; fr_warns.push('Healthcare: French medical system has different registration requirements — complex for international students'); }
+  else { fr_score += 10; }
+
+  if (a.goal === 'just_degree') { fr_score += 22; fr_pros.push('Just want a degree: France offers world-class education at near-zero tuition cost — best value degree in the world'); }
+  else if (a.goal === 'work_return') {
+    if (['arts','hospitality','mass_comm'].includes(a.field)) {
+      fr_score += 15; fr_pros.push('Work then return: France offers 2-year job-search visa — strong for EU creative and hospitality market');
+    } else {
+      fr_score += 8; fr_pros.push('Work then return: France 2-year job-search visa available — but language barrier limits options for non-French speakers');
+    }
+  }
+  else if (a.goal === 'settle') { fr_score += 8; fr_warns.push('PR goal: French PR possible but requires strong French language skills and 5+ years. Not the easiest path for Indians'); }
+  else if (a.goal === 'research') { fr_score += 20; fr_pros.push('Research career: CNRS is the world\'s largest research organisation — funded PhD and postdoc positions widely available'); }
+
+  if (a.intake === 'sep27') { fr_score += 8; fr_pros.push('Good timeline for France September intake applications opening January 2027'); }
+
+  fr_warns.push('French language: Learning basic French (A2 level) significantly expands your options and improves daily life');
+  fr_actions.push('Apply via Campus France India portal — mandatory step for all French university applications');
+  fr_actions.push('France requires proof of €615/month (≈₹57K) living costs for student visa');
+  fr_actions.push('Eiffel Scholarship deadline is January — apply early if you qualify');
+
+  countries.push({ country: 'France', flag: '🇫🇷', score: fr_score, pros: fr_pros, issues: fr_issues, warns: fr_warns, actions: fr_actions, cost: '₹12–25L', tuition: 'Nearly Free', approval: 'Good', pr: '5+ years' });
+
+  // ===== NETHERLANDS =====
+  let nl_score = 0;
+  let nl_issues = [], nl_pros = [], nl_actions = [], nl_warns = [];
+
+  if (a.budget === 'vlow') { nl_score -= 15; nl_issues.push('Under ₹15L is too low for Netherlands — minimum realistic is ₹22L+. Germany or France are better for this budget'); }
+  else if (a.budget === 'low') { nl_score += 15; nl_pros.push('₹15–25L fits Netherlands — EU tuition fees are regulated and reasonable at €2,200–6,000/year'); }
+  else if (a.budget === 'mid') { nl_score += 22; nl_pros.push('🟢 Budget fits Netherlands well — EU-regulated tuition (€2,200–6,000/yr), great quality:cost ratio'); }
+  else if (['high','vhigh'].includes(a.budget)) { nl_score += 20; nl_pros.push('Budget comfortably covers Netherlands — including top universities like TU Delft and Erasmus'); }
+  if (a.budget === 'scholarship') { nl_score += 18; nl_pros.push('Holland Scholarship — Dutch government offers €5,000 to first-year international students. Plus Orange Tulip Scholarship for Indian students specifically'); }
+
+  if (a.education === '12th') { nl_score -= 20; nl_issues.push('12th pass: Dutch universities require a completed bachelor degree — not eligible yet. Germany is the better option at this stage'); }
+  else if (a.education === 'grad_final') { nl_score += 10; nl_pros.push('Final year: Netherlands applications open November — apply now for September intake'); }
+  else if (a.education === 'grad_done') { nl_score += 25; nl_pros.push('🏆 Bachelor done: Netherlands is the hidden gem for Indian graduates — almost all Masters programs are in English, 1–2 years, strong job placement'); }
+  else if (a.education === 'pg') { nl_score += 16; nl_pros.push('Masters done: Dutch PhD programs are 4-year fully employed positions — you are paid as a researcher, not a student'); }
+  else if (a.education === 'phd') { nl_score += 20; nl_pros.push('PhD: Dutch PhD = employment contract — full salary, pension, work rights. Unique in Europe'); }
+
+  if (a.marks === 'top') { nl_score += 20; nl_pros.push('Excellent marks: TU Delft, Wageningen, Erasmus, University of Amsterdam are all accessible'); }
+  else if (a.marks === 'high') { nl_score += 18; nl_pros.push('Strong marks: competitive for most Dutch universities'); }
+  else if (a.marks === 'mid') { nl_score += 12; nl_warns.push('55–65% marks: accepted by many Dutch universities — some popular programs are competitive'); }
+  else { nl_score += 5; nl_warns.push('Below 55%: some Dutch universities have competitive admission — prepare a strong motivation letter'); }
+
+  if (a.ielts === 'excel') { nl_score += 22; nl_pros.push('🌟 Exceptional IELTS: Netherlands fully accessible — 95% of programs in English, Orange Tulip Scholarship, TU Delft and Erasmus open to you'); }
+  else if (a.ielts === 'great') { nl_score += 18; nl_pros.push('Strong IELTS: Netherlands programs almost all in English — excellent at TU Delft, Wageningen and Erasmus'); }
+  else if (a.ielts === 'good') { nl_score += 18; nl_pros.push('IELTS 6.0–6.5 meets Dutch university entry requirements for most programs'); }
+  else if (a.ielts === 'ok') { nl_score += 10; nl_warns.push('5.5–6.0 IELTS: meets minimum for some Dutch programs — 6.5 recommended for best options'); }
+  else if (a.ielts === 'none') { nl_score += 5; nl_warns.push('No IELTS: Netherlands programs are in English — IELTS is required. Prepare and appear first'); }
+  else { nl_score -= 5; nl_issues.push('Below 5.5 IELTS: does not meet Dutch university requirements for English-medium programs'); }
+
+  if (a.field === 'tech') {
+    if (['great','excel'].includes(a.ielts)) {
+      nl_score += 28; nl_pros.push('🔥 Tech + Strong IELTS: Netherlands is your hidden gem — TU Delft ranked #12 globally, Philips/ASML/Booking.com here, 1-year job search visa');
+    } else {
+      nl_score += 22; nl_pros.push('Tech/Engineering: TU Delft ranked #12 globally — Philips, ASML, Shell, Booking.com all headquartered here');
+    }
+  }
+  else if (a.field === 'ai_data') {
+    nl_score += 26; nl_pros.push('🔥 AI/Data Science: Netherlands is a hidden gem — Booking.com, TomTom, Adyen, ASML. EU data privacy capital, strong ecosystem');
+  }
+  else if (a.field === 'business') { nl_score += 22; nl_pros.push('Business: Erasmus University Rotterdam is top 5 in Europe — Netherlands is the gateway to European business. Many multinationals use Amsterdam as EU HQ'); }
+  else if (a.field === 'science') { nl_score += 20; nl_pros.push('Sciences: Wageningen University is world #1 in agriculture and life sciences — strong research culture'); }
+  else if (a.field === 'health') { nl_score += 15; nl_pros.push('Healthcare: Netherlands has good healthcare programs — Dutch hospitals are modern and well-funded'); }
+  else if (a.field === 'cyber') { nl_score += 20; nl_pros.push('Cybersecurity: Netherlands hosts NATO CCDCOE affiliate — strong cyber industry with government and finance sector demand'); }
+  else if (a.field === 'law') { nl_score += 12; nl_pros.push('Law: Dutch international law programs are strong — The Hague is the world capital of international law (ICC, ICJ all based here)'); }
+  else if (a.field === 'arts') { nl_score += 15; nl_pros.push('Arts: Amsterdam art scene is world class — Rijksmuseum, Van Gogh Museum, design schools. Strong creative industry'); }
+  else if (a.field === 'mass_comm') { nl_score += 12; nl_pros.push('Media: Netherlands has strong media programs in English — Amsterdam is a growing media hub'); }
+  else if (a.field === 'hospitality') { nl_score += 10; nl_pros.push('Hospitality: Netherlands tourism is strong — Amsterdam attracts 20M+ visitors/year. Good work rights during study'); }
+  else { nl_score += 10; }
+
+  if (a.goal === 'settle') { nl_score += 15; nl_pros.push('PR goal: Netherlands offers a clear path — 5 years of legal stay qualifies for permanent residency'); }
+  else if (a.goal === 'work_return') { nl_score += 20; nl_pros.push('Post-study work: Netherlands 1-year Orientation Year visa + access to all of Europe — Booking.com, ASML, Philips, Adyen actively hire graduates'); }
+  else if (a.goal === 'research') { nl_score += 18; nl_pros.push('Research: Dutch PhD = employment — you are paid a salary, not a student. Unique model in the world'); }
+  else if (a.goal === 'just_degree') { nl_score += 12; nl_pros.push('Degree value: Dutch degrees are EU-accredited — globally recognised with strong career outcomes'); }
+
+  nl_pros.push('🌍 English advantage: 95% of Dutch Masters programs are in English — no language learning required');
+  nl_pros.push('Location: Netherlands borders Germany, Belgium, UK — access to all of Europe from Amsterdam');
+  nl_actions.push('Apply via Studielink portal — Dutch university central application system');
+  nl_actions.push('Netherlands requires €11,400/year (≈₹10.5L) in a blocked account for student visa');
+  nl_actions.push('Orange Tulip Scholarship specifically for Indian students — check scholarshipportal.com');
+
+  countries.push({ country: 'Netherlands', flag: '🇳🇱', score: nl_score, pros: nl_pros, issues: nl_issues, warns: nl_warns, actions: nl_actions, cost: '₹22–35L', tuition: '₹2–6L/yr', approval: 'Good', pr: '5 years' });
+
+  // ===== CANADA =====
+  let ca_score = 0;
+  let ca_issues = [], ca_pros = [], ca_actions = [], ca_warns = [];
+
+  // Big warning upfront — visa situation
+  ca_issues.push('🚨 2024–2026 VISA WARNING: Canada capped international student permits at 364,000 in 2024 (down 35%). Most provinces are oversubscribed. Visa rejection rates for Indians have risen sharply. Apply only with a strong, well-documented application');
+
+  if (a.budget === 'vlow') { ca_score -= 20; ca_issues.push('Under ₹15L is far too low for Canada — minimum realistic is ₹40L+'); }
+  else if (a.budget === 'low') { ca_score -= 10; ca_warns.push('₹15–25L is well below Canada\'s minimum costs of ₹40L+ — education loan will be needed'); }
+  else if (a.budget === 'mid') { ca_score += 5; ca_warns.push('₹25–40L is tight for Canada — living costs are high especially in Toronto/Vancouver. Consider smaller cities like Halifax or Winnipeg'); }
+  else if (a.budget === 'high') { ca_score += 18; ca_pros.push('Budget works for Canada — good range for most provinces outside Toronto/Vancouver'); }
+  else if (a.budget === 'vhigh') { ca_score += 22; ca_pros.push('Budget comfortably covers Canada'); }
+  if (a.budget === 'scholarship') { ca_score += 15; ca_pros.push('Vanier Canada Graduate Scholarship — fully funded for PhD students. Competitive but open to Indians'); }
+
+  if (a.education === '12th') { ca_score -= 25; ca_issues.push('12th pass: Canadian universities require a completed bachelor degree for Masters. Foundation year available at extra cost'); }
+  else if (a.education === 'grad_final') { ca_score += 8; ca_warns.push('Final year: Apply now — Canadian processing times are 6–8 months'); }
+  else if (a.education === 'grad_done') { ca_score += 18; ca_pros.push('Bachelor done: Canada 2-year Masters + 3-year PGWP (Post-Graduate Work Permit) is one of the strongest work packages globally'); }
+  else if (a.education === 'pg') { ca_score += 20; ca_pros.push('Masters done: Canadian PhD programs offer stipends and TA positions — strong path to Express Entry PR'); }
+  else if (a.education === 'phd') { ca_score += 22; ca_pros.push('PhD: Canada actively recruits PhD researchers — Express Entry gives PhD holders extra CRS points toward PR'); }
+
+  if (a.marks === 'top') { ca_score += 22; ca_pros.push('Excellent marks strengthen your visa application and open top Canadian universities — UofT, UBC, McGill'); }
+  else if (a.marks === 'high') { ca_score += 16; ca_pros.push('Strong marks: most Canadian universities accessible'); }
+  else if (a.marks === 'mid') { ca_score += 8; ca_warns.push('55–65% marks: some Canadian universities accessible but visa officers may question academic genuineness'); }
+  else { ca_score -= 10; ca_issues.push('Below 55%: weak marks increase visa rejection risk in Canada\'s current strict environment'); }
+
+  if (['great','excel'].includes(a.ielts)) { ca_score += 22; ca_pros.push('Strong IELTS: meets Canadian university requirements and strengthens Express Entry CRS score for PR'); }
+  else if (a.ielts === 'good') { ca_score += 15; ca_pros.push('IELTS 6.0–6.5 meets most Canadian university requirements'); }
+  else if (a.ielts === 'ok') { ca_score += 5; ca_warns.push('5.5–6.0 IELTS: meets some colleges but not universities — improve to 6.5 before applying'); }
+  else if (a.ielts === 'none') { ca_score -= 5; ca_issues.push('No IELTS: Canada visa requires IELTS — cannot apply without it'); }
+  else { ca_score -= 15; ca_issues.push('Below 5.5 IELTS: does not meet Canadian entry requirements'); }
+
+  if (a.field === 'tech') { ca_score += 20; ca_pros.push('Tech: Canada has a critical tech shortage — Toronto and Vancouver are major tech hubs. PGWP gives 3 years work rights after graduation'); }
+  else if (a.field === 'ai_data') { ca_score += 25; ca_pros.push('🔥 AI/Data Science: Canada is a global AI leader — Vector Institute (Toronto), Mila (Montreal) are world top 3 AI research labs. Geoffrey Hinton built deep learning here'); }
+  else if (a.field === 'health') { ca_score += 22; ca_pros.push('Healthcare: Canada has severe nursing and healthcare shortage — fastest PR pathway via Provincial Nominee Programs'); }
+  else if (a.field === 'business') { ca_score += 15; ca_pros.push('Business: Rotman (Toronto), Ivey (Western), Sauder (UBC) are strong MBAs. Good ROI with PGWP work rights'); }
+  else if (a.field === 'cyber') { ca_score += 18; ca_pros.push('Cybersecurity: Canadian government and banking sector have strong cyber demand — Communications Security Establishment recruits internationally'); }
+  else if (a.field === 'science') { ca_score += 15; ca_pros.push('Sciences: Canadian research funding is strong — NSERC grants support international researchers'); }
+  else if (a.field === 'phd_research') { ca_score += 20; ca_pros.push('PhD/Research: Canadian PhD programs offer stipends — Vanier scholarship is fully funded. Strong path to Express Entry PR'); }
+  else if (a.field === 'law') { ca_score += 8; ca_warns.push('Law: Canadian law requires provincial bar admission — complex for international students. UK or Ireland are better for globally portable law degrees'); }
+  else if (a.field === 'mass_comm') { ca_score += 12; ca_pros.push('Media/Journalism: Ryerson (Toronto Metropolitan) and Carleton have strong journalism programs'); }
+  else if (a.field === 'arts') { ca_score += 10; ca_pros.push('Arts: Canadian universities have strong liberal arts tradition — Toronto, McGill, UBC are globally ranked'); }
+  else { ca_score += 8; }
+
+  if (a.goal === 'settle') { ca_score += 28; ca_pros.push('🏆 PR goal: Canada\'s Express Entry system is the clearest PR pathway in the world — FSW stream designed for educated professionals. Despite cap issues, PR pathway remains strong'); }
+  else if (a.goal === 'work_return') { ca_score += 20; ca_pros.push('Post-study work: 3-year PGWP is the longest post-study work permit in the English-speaking world'); }
+  else if (a.goal === 'research') { ca_score += 15; ca_pros.push('Research: Canadian funding councils (NSERC, SSHRC, CIHR) support international research — Vector Institute and Mila are world-class'); }
+  else if (a.goal === 'just_degree') { ca_score += 8; ca_pros.push('Degree value: Canadian degrees are globally recognised — strong in USA job market especially'); }
+
+  ca_warns.push('Apply to smaller cities (Halifax, Winnipeg, Calgary) — higher acceptance rates and lower cost than Toronto/Vancouver');
+  ca_actions.push('SDS (Student Direct Stream) requires IELTS 6.0+, GIC ₹11,000 CAD, and unconditional offer — fastest visa processing (20 days)');
+  ca_actions.push('Get your documents translated and attested — Canada IRCC requires official translations');
+  ca_actions.push('Apply September intake — January intake has fewer program options');
+
+  countries.push({ country: 'Canada', flag: '🇨🇦', score: ca_score, pros: ca_pros, issues: ca_issues, warns: ca_warns, actions: ca_actions, cost: '₹40–65L', tuition: '₹12–20L/yr', approval: 'Hard', pr: '3–5 years' });
+
   // Sort by score descending — top 4 shown as tabs, rest as "also analysed"
   // ── UNIVERSAL ADJUSTMENTS ──
   // If 12th pass: penalise all countries that don't accept 12th directly
   if (a.education === '12th') {
     countries.forEach(country => {
-      if (['United Kingdom','Australia','USA'].includes(country.country)) {
+      if (['United Kingdom','Australia','USA','Netherlands','Canada'].includes(country.country)) {
         country.score -= 10;
       }
     });
+    // 12th pass bonus for Germany, NZ, France already in their scoring
   }
 
   // vlow budget — Germany should always win, hard cap others
   if (a.budget === 'vlow') {
-    const minCosts = {'Ireland':22,'United Kingdom':35,'Australia':35,'USA':60,'New Zealand':28};
+    const minCosts = {'Ireland':22,'United Kingdom':35,'Australia':35,'USA':60,'New Zealand':28,'Netherlands':22,'Canada':40};
     countries.forEach(country => {
       const minCost = minCosts[country.country];
       if (minCost) {
@@ -2739,8 +2949,11 @@ function calculateResults() {
           country.issues.push('Budget of under ₹15L is well below ' + country.country + '\'s minimum cost of ₹' + minCost + 'L — not recommended');
       }
     });
+    // Germany and France get a boost — cheapest realistic options
     const de = countries.find(x=>x.country==='Germany');
     if (de) de.score += 10;
+    const fr = countries.find(x=>x.country==='France');
+    if (fr) fr.score += 8;
   }
 
   // If vlow budget: ensure no country with min cost > ₹18L tops the list
